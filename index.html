@@ -2,8 +2,9 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<meta name="theme-color" content="#ffffff"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"/>
+<meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
@@ -12,322 +13,251 @@
 <link rel="apple-touch-icon" href="icon-192.png"/>
 <title>YT Meta 생성기</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#ffffff;--bg2:#f6f6f4;--bg3:#ebebeb;
+  --text:#1a1a1a;--text2:#666;--text3:#aaa;
+  --border:#e0e0da;--border2:#ccc;
+  --accent:#1a1a1a;--accent-inv:#fff;
+  --green:#1a7a4a;--green-bg:#eaf6ef;--green-border:#b2dfc5;
+  --red:#c00;--red-bg:#fff0f0;--red-border:#fcc;
+  --radius:12px;--radius-sm:8px;--radius-xs:6px;
+  --font:-apple-system,BlinkMacSystemFont,'Pretendard','Apple SD Gothic Neo',sans-serif;
+}
+@media(prefers-color-scheme:dark){
   :root{
-    --bg:#ffffff;--bg2:#f6f6f4;--bg3:#efefec;
-    --text:#1a1a1a;--text2:#666;--text3:#999;
-    --border:#e0e0da;--border2:#ccc;
-    --accent:#1a1a1a;--green:#1a7a4a;--green-bg:#eaf6ef;
-    --radius:12px;--radius-sm:8px;
-    --font:-apple-system,BlinkMacSystemFont,'Pretendard','Apple SD Gothic Neo',sans-serif;
+    --bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;
+    --text:#f2f2f7;--text2:#aeaeb2;--text3:#636366;
+    --border:#3a3a3c;--border2:#48484a;
+    --accent:#f2f2f7;--accent-inv:#1c1c1e;
+    --green:#34c759;--green-bg:#1a3326;--green-border:#1f5c3a;
+    --red:#ff6b6b;--red-bg:#2c1a1a;--red-border:#5c2020;
   }
-  @media(prefers-color-scheme:dark){
-    :root{
-      --bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;
-      --text:#f2f2f7;--text2:#aeaeb2;--text3:#636366;
-      --border:#3a3a3c;--border2:#48484a;
-      --accent:#f2f2f7;--green:#34c759;--green-bg:#1a3326;
-    }
-  }
-  html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;}
-  body{display:flex;flex-direction:column;max-width:600px;margin:0 auto;}
-
-  /* Header */
-  header{
-    padding:16px 20px 12px;
-    border-bottom:1px solid var(--border);
-    display:flex;align-items:center;justify-content:space-between;
-    position:sticky;top:0;background:var(--bg);z-index:10;
-  }
-  header h1{font-size:17px;font-weight:600;letter-spacing:-0.3px;}
-  .settings-btn{
-    width:34px;height:34px;border-radius:50%;
-    border:1px solid var(--border);background:var(--bg2);
-    display:flex;align-items:center;justify-content:center;
-    cursor:pointer;font-size:16px;
-  }
-
-  /* Main scroll area */
-  main{flex:1;overflow-y:auto;padding:20px;}
-
-  /* API key panel */
-  .api-panel{
-    background:var(--bg2);border-radius:var(--radius);
-    padding:14px 16px;margin-bottom:20px;
-    border:1px solid var(--border);
-  }
-  .api-panel label{font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:500;}
-  .api-row{display:flex;gap:8px;}
-  .api-input{
-    flex:1;padding:9px 12px;border-radius:var(--radius-sm);
-    border:1px solid var(--border2);background:var(--bg);
-    color:var(--text);font-size:14px;font-family:var(--font);
-    outline:none;
-  }
-  .api-input:focus{border-color:var(--accent);}
-  .save-btn{
-    padding:9px 16px;border-radius:var(--radius-sm);
-    border:1px solid var(--border2);background:var(--accent);
-    color:var(--bg);font-size:14px;font-weight:500;cursor:pointer;
-    white-space:nowrap;
-  }
-  .api-status{font-size:11px;margin-top:6px;color:var(--text3);}
-  .api-status.ok{color:var(--green);}
-
-  /* Input area */
-  .input-section label{font-size:12px;color:var(--text2);font-weight:500;letter-spacing:0.03em;display:block;margin-bottom:8px;}
-  .title-input{
-    width:100%;padding:13px 16px;
-    border-radius:var(--radius);border:1px solid var(--border2);
-    background:var(--bg);color:var(--text);
-    font-size:16px;font-family:var(--font);outline:none;
-    transition:border-color 0.15s;
-  }
-  .title-input:focus{border-color:var(--accent);}
-  .gen-btn{
-    width:100%;margin-top:12px;padding:14px;
-    border-radius:var(--radius);border:none;
-    background:var(--accent);color:var(--bg);
-    font-size:16px;font-weight:600;font-family:var(--font);
-    cursor:pointer;transition:opacity 0.15s;
-    letter-spacing:-0.2px;
-  }
-  .gen-btn:active{opacity:0.7;}
-  .gen-btn:disabled{opacity:0.35;cursor:not-allowed;}
-
-  /* Skeleton */
-  .skeleton-wrap{margin-top:24px;display:none;}
-  .skeleton{background:var(--bg3);border-radius:var(--radius);animation:pulse 1.3s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-
-  /* Result cards */
-  .result-wrap{margin-top:24px;display:none;gap:16px;flex-direction:column;}
-  .result-card{background:var(--bg2);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;}
-  .card-header{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:10px 16px;border-bottom:1px solid var(--border);
-  }
-  .card-label{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:0.06em;text-transform:uppercase;}
-  .copy-btn{
-    font-size:12px;font-weight:500;padding:5px 12px;
-    border-radius:20px;border:1px solid var(--border2);
-    background:var(--bg);color:var(--text2);cursor:pointer;
-    transition:all 0.15s;font-family:var(--font);
-  }
-  .copy-btn.copied{color:var(--green);border-color:var(--green);background:var(--green-bg);}
-  .card-body{padding:14px 16px;font-size:14px;line-height:1.75;color:var(--text);white-space:pre-wrap;word-break:break-word;}
-  .tags-body{padding:12px 16px;display:flex;flex-wrap:wrap;gap:6px;}
-  .tag{
-    font-size:12px;padding:4px 10px;border-radius:20px;
-    background:var(--bg3);color:var(--text2);
-    border:1px solid var(--border);
-  }
-
-  /* Error */
-  .error-msg{
-    margin-top:16px;padding:12px 16px;
-    background:#fff0f0;border:1px solid #fcc;
-    border-radius:var(--radius-sm);font-size:13px;color:#c00;
-    display:none;
-  }
-
-  /* Safe area bottom */
-  .bottom-pad{height:env(safe-area-inset-bottom,16px);}
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);}
+body{display:flex;flex-direction:column;max-width:600px;margin:0 auto;}
+.tabbar{display:flex;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;}
+.tab{flex:1;padding:14px 0;text-align:center;font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;}
+.tab.active{color:var(--text);border-bottom-color:var(--accent);}
+.page{display:none;flex:1;overflow-y:auto;padding:20px;}
+.page.active{display:flex;flex-direction:column;}
+.section-label{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:8px;}
+.api-box{background:var(--bg2);border-radius:var(--radius);border:1px solid var(--border);padding:14px 16px;margin-bottom:20px;}
+.api-row{display:flex;gap:8px;margin-top:6px;}
+.api-input{flex:1;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:14px;font-family:var(--font);outline:none;}
+.api-input:focus{border-color:var(--accent);}
+.save-btn{padding:10px 16px;border-radius:var(--radius-sm);border:none;background:var(--accent);color:var(--accent-inv);font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:var(--font);}
+.api-status{font-size:12px;margin-top:8px;color:var(--text3);}
+.api-status.ok{color:var(--green);}
+.api-status.err{color:var(--red);}
+.title-input{width:100%;padding:13px 16px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-size:16px;font-family:var(--font);outline:none;}
+.title-input:focus{border-color:var(--accent);}
+.gen-btn{width:100%;margin-top:12px;padding:15px;border-radius:var(--radius);border:none;background:var(--accent);color:var(--accent-inv);font-size:16px;font-weight:600;font-family:var(--font);cursor:pointer;transition:opacity 0.15s;}
+.gen-btn:active{opacity:0.7;}
+.gen-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.skeleton{background:var(--bg3);border-radius:var(--radius);animation:pulse 1.3s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.45}}
+.card{background:var(--bg2);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;margin-top:16px;}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);}
+.card-lbl{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:0.07em;text-transform:uppercase;}
+.copy-btn{font-size:12px;font-weight:500;padding:5px 12px;border-radius:20px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;font-family:var(--font);transition:all 0.15s;}
+.copy-btn.done{color:var(--green);border-color:var(--green-border);background:var(--green-bg);}
+.card-body{padding:14px 16px;font-size:14px;line-height:1.8;color:var(--text);white-space:pre-wrap;word-break:break-word;}
+.tags-body{padding:12px 16px;display:flex;flex-wrap:wrap;gap:6px;}
+.tag{font-size:12px;padding:4px 10px;border-radius:20px;background:var(--bg3);color:var(--text2);border:1px solid var(--border);}
+.err-box{margin-top:14px;padding:12px 16px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:var(--radius-sm);font-size:13px;color:var(--red);display:none;}
+.hist-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text3);font-size:14px;gap:8px;padding:60px 0;}
+.hist-item{background:var(--bg2);border-radius:var(--radius);border:1px solid var(--border);padding:14px 16px;margin-bottom:12px;cursor:pointer;transition:background 0.1s;}
+.hist-item:active{background:var(--bg3);}
+.hist-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hist-preview{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hist-date{font-size:11px;color:var(--text3);margin-top:6px;}
+.hist-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.clear-btn{font-size:12px;color:var(--red);cursor:pointer;padding:4px 10px;border-radius:var(--radius-xs);border:1px solid var(--red-border);background:var(--red-bg);font-family:var(--font);}
+.pad{height:max(env(safe-area-inset-bottom,0px),20px);}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>📋 YT Meta 생성기</h1>
-  <div class="settings-btn" onclick="toggleApiPanel()" title="API 키 설정">⚙️</div>
-</header>
+<div class="tabbar">
+  <div class="tab active" id="tab-generate" onclick="switchTab('generate')">생성</div>
+  <div class="tab" id="tab-history" onclick="switchTab('history')">히스토리</div>
+  <div class="tab" id="tab-settings" onclick="switchTab('settings')">설정</div>
+</div>
 
-<main>
-  <!-- API Key Panel -->
-  <div class="api-panel" id="apiPanel" style="display:none">
-    <label>Anthropic API Key</label>
+<!-- 생성 -->
+<div class="page active" id="page-generate">
+  <div class="section-label">영상 제목</div>
+  <input class="title-input" id="titleInput" type="text"
+    placeholder="예: 배신당한 사람들이 공통적으로 놓치는 것"
+    autocomplete="off" autocorrect="off" spellcheck="false"/>
+  <button class="gen-btn" id="genBtn" onclick="generate()">설명 + 태그 생성</button>
+
+  <div id="skelWrap" style="display:none;margin-top:16px">
+    <div class="skeleton" style="height:150px;margin-bottom:12px;"></div>
+    <div class="skeleton" style="height:70px;"></div>
+  </div>
+  <div class="err-box" id="errBox"></div>
+  <div id="resultWrap" style="display:none">
+    <div class="card">
+      <div class="card-head"><span class="card-lbl">설명</span><button class="copy-btn" id="cpDesc" onclick="copyText('desc')">복사</button></div>
+      <div class="card-body" id="descOut"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-lbl">태그</span><button class="copy-btn" id="cpTags" onclick="copyText('tags')">복사</button></div>
+      <div class="tags-body" id="tagsOut"></div>
+    </div>
+  </div>
+  <div class="pad"></div>
+</div>
+
+<!-- 히스토리 -->
+<div class="page" id="page-history">
+  <div id="histContent"></div>
+  <div class="pad"></div>
+</div>
+
+<!-- 설정 -->
+<div class="page" id="page-settings">
+  <div class="api-box">
+    <div class="section-label">Anthropic API Key</div>
     <div class="api-row">
-      <input class="api-input" id="apiKeyInput" type="password" placeholder="sk-ant-api03-..."/>
+      <input class="api-input" id="apiInput" type="password" placeholder="sk-ant-api03-..."/>
       <button class="save-btn" onclick="saveKey()">저장</button>
     </div>
     <div class="api-status" id="apiStatus"></div>
   </div>
-
-  <!-- Title Input -->
-  <div class="input-section">
-    <label>영상 제목</label>
-    <input class="title-input" id="titleInput" type="text"
-      placeholder="예: 배신당한 사람들이 공통적으로 놓치는 것"
-      autocomplete="off" autocorrect="off" spellcheck="false"/>
-    <button class="gen-btn" id="genBtn" onclick="generate()">설명 + 태그 생성</button>
-  </div>
-
-  <!-- Skeleton -->
-  <div class="skeleton-wrap" id="skeleton">
-    <div class="skeleton" style="height:160px;margin-bottom:12px;"></div>
-    <div class="skeleton" style="height:80px;"></div>
-  </div>
-
-  <!-- Error -->
-  <div class="error-msg" id="errorMsg"></div>
-
-  <!-- Results -->
-  <div class="result-wrap" id="results">
-    <div class="result-card">
-      <div class="card-header">
-        <span class="card-label">설명</span>
-        <button class="copy-btn" id="copyDescBtn" onclick="copyText('desc')">복사</button>
-      </div>
-      <div class="card-body" id="descText"></div>
-    </div>
-    <div class="result-card">
-      <div class="card-header">
-        <span class="card-label">태그</span>
-        <button class="copy-btn" id="copyTagsBtn" onclick="copyText('tags')">복사</button>
-      </div>
-      <div class="tags-body" id="tagsBody"></div>
-    </div>
-  </div>
-
-  <div class="bottom-pad"></div>
-</main>
+  <div class="pad"></div>
+</div>
 
 <script>
-const AI_DISCLOSURE = '\n\n---\n※ 이 영상은 AI 기술을 활용하여 제작되었습니다.';
+const AI_NOTE = '\n\n---\n※ 이 영상은 AI 기술을 활용하여 제작되었습니다.';
 let descRaw = '', tagsRaw = '';
 
-// API Key management
-function getKey(){ return localStorage.getItem('yt_api_key') || ''; }
-function saveKey(){
-  const k = document.getElementById('apiKeyInput').value.trim();
-  if(!k){ showApiStatus('API 키를 입력해주세요.', false); return; }
-  localStorage.setItem('yt_api_key', k);
-  showApiStatus('저장되었습니다.', true);
-}
-function showApiStatus(msg, ok){
-  const el = document.getElementById('apiStatus');
-  el.textContent = msg;
-  el.className = 'api-status' + (ok ? ' ok' : '');
-}
-function toggleApiPanel(){
-  const p = document.getElementById('apiPanel');
-  const visible = p.style.display !== 'none';
-  p.style.display = visible ? 'none' : 'block';
-  if(!visible){
-    const k = getKey();
-    document.getElementById('apiKeyInput').value = k;
-    showApiStatus(k ? '저장된 키가 있습니다.' : 'API 키를 입력하고 저장하세요.', !!k);
-  }
+function switchTab(name){
+  ['generate','history','settings'].forEach(n => {
+    document.getElementById('tab-'+n).classList.toggle('active', n===name);
+    document.getElementById('page-'+n).classList.toggle('active', n===name);
+  });
+  if(name==='history') renderHistory();
+  if(name==='settings') loadKeyUI();
 }
 
-// On load: show api panel if no key
-window.addEventListener('load', () => {
-  if(!getKey()) {
-    document.getElementById('apiPanel').style.display = 'block';
-    showApiStatus('API 키를 입력하고 저장하세요.', false);
-  }
-  document.getElementById('titleInput').addEventListener('keydown', e => {
-    if(e.key === 'Enter') generate();
-  });
-});
+function getKey(){ return localStorage.getItem('yt_apikey')||''; }
+function saveKey(){
+  const v = document.getElementById('apiInput').value.trim();
+  if(!v){ setApiStatus('API 키를 입력해주세요.','err'); return; }
+  localStorage.setItem('yt_apikey', v);
+  setApiStatus('저장되었습니다. ✓','ok');
+}
+function loadKeyUI(){
+  const k = getKey();
+  document.getElementById('apiInput').value = k;
+  setApiStatus(k ? '저장된 키가 있습니다. ✓' : 'API 키를 입력하고 저장하세요.', k ? 'ok' : '');
+}
+function setApiStatus(msg, cls){
+  const el = document.getElementById('apiStatus');
+  el.textContent = msg;
+  el.className = 'api-status'+(cls?' '+cls:'');
+}
 
 async function generate(){
   const title = document.getElementById('titleInput').value.trim();
   if(!title) return;
   const key = getKey();
-  if(!key){
-    document.getElementById('apiPanel').style.display = 'block';
-    showApiStatus('API 키를 먼저 저장해주세요.', false);
-    return;
-  }
+  if(!key){ switchTab('settings'); setApiStatus('API 키를 먼저 저장해주세요.','err'); return; }
 
   setLoading(true);
+  document.getElementById('errBox').style.display='none';
+  document.getElementById('resultWrap').style.display='none';
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{
         'Content-Type':'application/json',
-        'x-api-key': key,
+        'x-api-key':key,
         'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'anthropic-dangerous-direct-browser-access':'true'
       },
       body: JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1000,
-        system:`당신은 한국어 심리 콘텐츠 유튜브 채널의 SEO 전문가입니다.
-영상 제목을 받으면 아래 JSON 형식으로만 응답하세요. 다른 말은 절대 하지 마세요.
-
-{
-  "description": "유튜브 영상 설명문 (150~250자, 자연스럽고 궁금증을 유발하는 문체, 심리학 관련 채널 톤)",
-  "tags": ["태그1","태그2",...] // 관련 키워드 10~15개, 해시태그 없이 단어만
-}
-
-설명문은 자연스러운 문단으로 작성하고 해시태그를 포함하지 마세요.
-태그는 검색 노출에 최적화된 핵심 키워드로 구성하세요.`,
-        messages:[{role:'user', content:`영상 제목: ${title}`}]
+        system:`당신은 한국어 심리 콘텐츠 유튜브 채널의 SEO 전문가입니다. 영상 제목을 받으면 아래 JSON 형식으로만 응답하세요. 다른 말은 절대 하지 마세요.
+{"description":"유튜브 영상 설명문 (150~250자, 자연스럽고 궁금증을 유발하는 문체, 심리학 채널 톤)","tags":["태그1","태그2"]}
+설명문에 해시태그 포함 금지. 태그는 검색 최적화 키워드 10~15개.`,
+        messages:[{role:'user',content:`영상 제목: ${title}`}]
       })
     });
-
-    if(!res.ok){
-      const err = await res.json();
-      throw new Error(err.error?.message || `HTTP ${res.status}`);
-    }
-
+    if(!res.ok){ const e=await res.json().catch(()=>({})); throw new Error(e.error?.message||`오류 ${res.status}`); }
     const data = await res.json();
-    const text = data.content?.map(i => i.text||'').join('');
-    const clean = text.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(clean);
+    const raw = data.content?.map(i=>i.text||'').join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
 
-    descRaw = parsed.description + AI_DISCLOSURE;
-    tagsRaw = Array.isArray(parsed.tags) ? parsed.tags.join(', ') : parsed.tags;
+    descRaw = parsed.description + AI_NOTE;
+    tagsRaw = Array.isArray(parsed.tags) ? parsed.tags.join(', ') : String(parsed.tags);
 
-    document.getElementById('descText').textContent = descRaw;
+    document.getElementById('descOut').textContent = descRaw;
+    const tb = document.getElementById('tagsOut'); tb.innerHTML='';
+    (parsed.tags||[]).forEach(t=>{ const s=document.createElement('span'); s.className='tag'; s.textContent=t; tb.appendChild(s); });
 
-    const tagsBody = document.getElementById('tagsBody');
-    tagsBody.innerHTML = '';
-    (parsed.tags||[]).forEach(t => {
-      const span = document.createElement('span');
-      span.className = 'tag';
-      span.textContent = t;
-      tagsBody.appendChild(span);
-    });
-
-    setLoading(false);
-    document.getElementById('results').style.display = 'flex';
-    document.getElementById('errorMsg').style.display = 'none';
-
-  } catch(e) {
-    setLoading(false);
-    const em = document.getElementById('errorMsg');
-    em.textContent = '오류: ' + e.message;
-    em.style.display = 'block';
+    document.getElementById('resultWrap').style.display='block';
+    saveHistory(title, descRaw, tagsRaw);
+  } catch(e){
+    const eb=document.getElementById('errBox'); eb.textContent='오류: '+e.message; eb.style.display='block';
   }
+  setLoading(false);
 }
 
 function setLoading(on){
-  document.getElementById('genBtn').disabled = on;
-  document.getElementById('genBtn').textContent = on ? '생성 중...' : '설명 + 태그 생성';
-  document.getElementById('skeleton').style.display = on ? 'block' : 'none';
-  if(on) document.getElementById('results').style.display = 'none';
+  document.getElementById('genBtn').disabled=on;
+  document.getElementById('genBtn').textContent=on?'생성 중...':'설명 + 태그 생성';
+  document.getElementById('skelWrap').style.display=on?'block':'none';
 }
 
 function copyText(type){
-  const text = type==='desc' ? descRaw : tagsRaw;
-  const btnId = type==='desc' ? 'copyDescBtn' : 'copyTagsBtn';
+  const text=type==='desc'?descRaw:tagsRaw, id=type==='desc'?'cpDesc':'cpTags';
   navigator.clipboard.writeText(text).then(()=>{
-    const btn = document.getElementById(btnId);
-    btn.textContent = '복사됨 ✓';
-    btn.classList.add('copied');
-    setTimeout(()=>{ btn.textContent='복사'; btn.classList.remove('copied'); }, 2000);
+    const b=document.getElementById(id); b.textContent='복사됨 ✓'; b.classList.add('done');
+    setTimeout(()=>{ b.textContent='복사'; b.classList.remove('done'); },2000);
   });
 }
-</script>
-<script>
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("/sw.js").catch(()=>{});
+
+function getHistory(){ return JSON.parse(localStorage.getItem('yt_history')||'[]'); }
+function saveHistory(title,desc,tags){
+  const h=getHistory();
+  h.unshift({id:Date.now(),title,desc,tags,date:new Date().toLocaleDateString('ko-KR')});
+  if(h.length>50) h.pop();
+  localStorage.setItem('yt_history',JSON.stringify(h));
 }
+function clearHistory(){
+  if(!confirm('히스토리를 모두 삭제할까요?')) return;
+  localStorage.removeItem('yt_history'); renderHistory();
+}
+function renderHistory(){
+  const h=getHistory(), el=document.getElementById('histContent');
+  if(!h.length){ el.innerHTML='<div class="hist-empty"><span style="font-size:36px">📭</span><span>아직 생성 내역이 없습니다</span></div>'; return; }
+  el.innerHTML=`<div class="hist-head"><div class="section-label" style="margin:0">총 ${h.length}건</div><button class="clear-btn" onclick="clearHistory()">전체 삭제</button></div>`
+    +h.map(it=>`<div class="hist-item" onclick="loadHist(${it.id})"><div class="hist-title">${esc(it.title)}</div><div class="hist-preview">${esc(it.desc.slice(0,60))}...</div><div class="hist-date">${it.date}</div></div>`).join('');
+}
+function loadHist(id){
+  const it=getHistory().find(i=>i.id===id); if(!it) return;
+  switchTab('generate');
+  document.getElementById('titleInput').value=it.title;
+  descRaw=it.desc; tagsRaw=it.tags;
+  document.getElementById('descOut').textContent=it.desc;
+  const tb=document.getElementById('tagsOut'); tb.innerHTML='';
+  it.tags.split(', ').forEach(t=>{ const s=document.createElement('span'); s.className='tag'; s.textContent=t.trim(); tb.appendChild(s); });
+  document.getElementById('resultWrap').style.display='block';
+}
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+window.addEventListener('load',()=>{
+  document.getElementById('titleInput').addEventListener('keydown',e=>{ if(e.key==='Enter') generate(); });
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(()=>{});
+  }
+});
 </script>
 </body>
 </html>
- 
