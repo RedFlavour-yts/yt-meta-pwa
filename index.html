@@ -195,7 +195,7 @@ async function generate(){
     const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
 
     descRaw = parsed.description + AI_NOTE;
-    tagsRaw = Array.isArray(parsed.tags) ? parsed.tags.join(', ') : String(parsed.tags);
+    tagsRaw = Array.isArray(parsed.tags) ? parsed.tags.join(',') : String(parsed.tags);
 
     document.getElementById('descOut').textContent = descRaw;
     const tb = document.getElementById('tagsOut'); tb.innerHTML='';
@@ -247,7 +247,7 @@ function loadHist(id){
   descRaw=it.desc; tagsRaw=it.tags;
   document.getElementById('descOut').textContent=it.desc;
   const tb=document.getElementById('tagsOut'); tb.innerHTML='';
-  it.tags.split(', ').forEach(t=>{ const s=document.createElement('span'); s.className='tag'; s.textContent=t.trim(); tb.appendChild(s); });
+  it.tags.split(',').forEach(t=>{ const s=document.createElement('span'); s.className='tag'; s.textContent=t.trim(); tb.appendChild(s); });
   document.getElementById('resultWrap').style.display='block';
 }
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
